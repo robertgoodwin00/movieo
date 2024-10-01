@@ -1,0 +1,62 @@
+<mat-form-field>
+    <input matInput type="text" placeholder="Search for a movie" [(ngModel)]="searchTerm" (keyup.enter)="searchMovies()">
+</mat-form-field>
+  
+  &nbsp; 
+  <button mat-raised-button color="primary" (click)="searchMovies()">SEARCH</button>
+  &nbsp;
+
+    <mat-checkbox (change)="toggleWatchedFilter()" label="Watched"><span class="checkbox">Watched</span></mat-checkbox>
+    <mat-checkbox (change)="toggleOwnedFilter()" label="Owned"><span class="checkbox">Owned</span></mat-checkbox>
+
+
+  
+  <div *ngIf="movies.length">
+    <mat-card *ngFor="let movie of movies" class="movie-card">
+      <div class="movie-header">
+        <mat-card-title>{{movie.title}}</mat-card-title>
+        <mat-card-title><span style="font-weight:normal; font-size:smaller;">{{movie.release_date}}</span></mat-card-title>
+        <mat-card-subtitle> {{movie.runtime}} min</mat-card-subtitle>
+      </div>
+      <div class="movie-content">
+        <img [src]="getPosterUrl(movie.poster_path)" alt="{{movie.title}}" class="movie-poster">
+        <div class="movie-details">
+          <div *ngIf="movie.director">
+            <strong>Director: </strong>
+            <span> {{movie.director}} </span>
+          </div>
+          <div *ngIf="movie.producer">
+            <strong>Producer: </strong>
+            <span> {{movie.producer}} </span>
+          </div>
+          <!-- Display actors and watched status -->
+          <div *ngIf="movie.cast && movie.cast.length">
+            <strong>Cast: </strong>
+            <span *ngFor="let actor of movie.cast.slice(0, 3)">{{actor.name}}, </span>
+          </div>
+          <div>
+            <mat-checkbox (change)="toggleWatched(movie.id)" [checked]="movie.watched">Watched</mat-checkbox>
+          </div>
+          <div>
+            <mat-checkbox (change)="toggleOwned(movie.id)" [checked]="movie.owned">Owned</mat-checkbox>
+          </div>
+          
+          <div *ngIf="movie.watched">
+            <mat-radio-group>
+              <mat-radio-button value="1" (change)="setLiked($event, movie.id)" [checked]="movie.liked == 1">Hated</mat-radio-button>
+              <mat-radio-button value="2" (change)="setLiked($event, movie.id)" [checked]="movie.liked == 2">Disliked</mat-radio-button>
+              <mat-radio-button value="3" (change)="setLiked($event, movie.id)" [checked]="movie.liked == 3">No opinion</mat-radio-button>
+              <mat-radio-button value="4" (change)="setLiked($event, movie.id)" [checked]="movie.liked == 4">Liked</mat-radio-button>
+              <mat-radio-button value="5" (change)="setLiked($event, movie.id)" [checked]="movie.liked == 5">Loved</mat-radio-button>
+              <mat-radio-button value="6" (change)="setLiked($event, movie.id)" [checked]="movie.liked == 6">All-time favorite</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+
+        </div>
+      </div>
+    </mat-card>
+
+    <div style="height:20px;"></div>
+
+  </div>
